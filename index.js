@@ -103,8 +103,6 @@ class BPTree {
       this.root.insert(key);
     } else {
       let n = this.findLeafNode(key, this.root);
-      if (key === 30) {
-      }
       if (n.isFull()) {
         let [newRootKey, splitKeys] = n.insert(key);
         let newNode = new Node(this.m);
