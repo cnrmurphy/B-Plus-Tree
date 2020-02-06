@@ -166,15 +166,16 @@ class BPTree {
   
   listKeys() {
     let ln = this.findLeafNode(1, this.root);
+    let ll = [];
     while (ln) {
-      console.log(ln.keys);
+      ll.push(`${ln.keys} -> `);
       ln = ln.nextNode;
-    } 
+    }
+    console.log(ll.join(','));
   }
 }
 
 const bpt = new BPTree(4);
-ins = bpt.insert;
 bpt.insert(2);
 bpt.insert(4);
 bpt.insert(6);
@@ -203,7 +204,8 @@ bpt.insert(50);
 bpt.insert(5);
 bpt.insert(37);
 console.log('ROOT', bpt.root);
-console.log('keys', bpt.listKeys());
 
 a = bpt.root.pointers.map(p => p.keys)
+console.log(bpt.root.keys);
 console.log(a);
+console.log('keys', bpt.listKeys());
