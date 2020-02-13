@@ -73,7 +73,8 @@ class BPTree {
       this.root = new Node(this.m);
       this.root.insert(key, value);
     } else {
-      let n = this.findLeafNode(key, this.root);
+      let [n, idx] = this.findLeafNode(key, this.root);
+      //console.log('leafnode', n)
       if (n.isFull()) {
         let newData = n.data.splice(n.data.length / 2, n.data.length - 1);
         let [newRootKey, splitKeys] = n.insert(key, value);
@@ -82,7 +83,11 @@ class BPTree {
         newNode.parent = n.parent;
         newNode.data = newData
         newNode.insertData(value, newNode.keys.indexOf(key));
+        newNode.nextNode = n.nextNode;
         n.nextNode = newNode;
+        if (n.parent) {
+          n.parent.pointers.splice(idx+1, 0, newNode);
+        }
         this.parentInsert(newRootKey, n, newNode);
       } else {
         n.insert(key, value);
@@ -113,7 +118,7 @@ class BPTree {
         // if the immediate parent is not full, add the new key and pointer to new child
         rightNode.parent = parent;
         parent.insert(key);
-        parent.pointers.push(rightNode);
+        //parent.pointers.push(rightNode);
       }
     } else {
       this.makeRootNode(key, leftNode, rightNode);
@@ -130,25 +135,24 @@ class BPTree {
     this.root = rn;
   }
 
-  findLeafNode(key, node) {
+  findLeafNode(key, node, idx=-1) {
     if (node.isLeaf) {
-      return node;
+      return [node, idx];
     } else {
       let [foundIndex, pointerIndex] = binarySearch(node.keys, key);
       if (pointerIndex !== null) {
-        return this.findLeafNode(key, node.pointers[pointerIndex]);
+        return this.findLeafNode(key, node.pointers[pointerIndex], pointerIndex);
       }
       if (foundIndex !== null) {
-        return this.findLeafNode(key, node.pointers[foundIndex+1]);
+        return this.findLeafNode(key, node.pointers[foundIndex+1], foundIndex+1);
       }
     }
   }
   
   listKeys() {
-    let ln = this.findLeafNode('a', this.root);
+    let [ln] = this.findLeafNode('a', this.root);
     let ll = [];
     while (ln) {
-      console.log(ln.keys);
       ll.push(`${ln.keys} -> `);
       ln = ln.nextNode;
     }
@@ -156,8 +160,7 @@ class BPTree {
   }
 
   retrieve(key) {
-    let ln = this.findLeafNode(key, this.root);
-    console.log(ln);
+    let [ln] = this.findLeafNode(key, this.root);
     let [i] = binarySearch(ln.keys, key);
     return ln.data[i];
   }
