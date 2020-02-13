@@ -25,7 +25,12 @@ const Item = (n,v) => ({
 });
 
 const b = new Bucket('items');
-const names = ['alpha', 'beta', 'gamma', 'omega', 'sigma', 'zeta', 'phi', 'zues', 'thore', 'odin', 'delta', 'dorian', 'taleb', 'tron', 'tree', 'zelda', 'zora', 'zink'].map((n, i) => Item(n,(i+1)*10));
+const names = [
+  'alpha', 'beta', 'gamma', 'omega', 'sigma', 'zeta', 'phi',
+  'zues', 'thore', 'odin', 'delta', 'dorian', 'taleb', 'tron',
+  'tree', 'zelda', 'zora', 'zink', 'omincron', 'orion', 'zzz',
+  'zio', 'zion', 'zpp', 'zss'
+].map((n, i) => Item(n,(i+1)*10));
 
 names.forEach(g => {
   b.insert(g.name, g);
@@ -33,4 +38,4 @@ names.forEach(g => {
 
 
 b.keys();
-console.log(b.find('zeta'));
+console.log(b.find('zink'));
