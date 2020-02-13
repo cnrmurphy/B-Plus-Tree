@@ -85,6 +85,11 @@ class BPTree {
         newNode.insertData(value, newNode.keys.indexOf(key));
         newNode.nextNode = n.nextNode;
         n.nextNode = newNode;
+        // If the leaf node has a parent, we must rebalance the parents pointers.
+        // When we split a leaf node, the new node in memory will always be to the right
+        // of the original node. Therefore we must insert a pointer to the new node
+        // in between the original node and its neighbor. Idx is the index of the
+        // original node, so we simply insert our new node into the next index
         if (n.parent) {
           n.parent.pointers.splice(idx+1, 0, newNode);
         }
@@ -115,10 +120,9 @@ class BPTree {
           this.makeRootNode(newRootKey, parent, internalNode);
         }
       } else {
-        // if the immediate parent is not full, add the new key and pointer to new child
+        // if the immediate parent is not full, add the new key
         rightNode.parent = parent;
         parent.insert(key);
-        //parent.pointers.push(rightNode);
       }
     } else {
       this.makeRootNode(key, leftNode, rightNode);
